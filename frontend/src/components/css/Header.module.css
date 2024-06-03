@@ -1,0 +1,39 @@
+.header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.header nav .navList {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.header nav .navList .navLi {
+  margin: 0 15px;
+}
+.header nav .navList .navLi .navLink {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+}
+.header nav .navList .navLi .navLink:hover {
+  background-color: #555;
+  color: #fff;
+  border-radius: 5px;
+}/*# sourceMappingURL=Header.module.css.map */

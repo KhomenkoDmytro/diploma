@@ -1,0 +1,77 @@
+.card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px;
+  cursor: pointer;
+  -webkit-transition: -webkit-box-shadow 0.3s ease;
+  transition: -webkit-box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, -webkit-box-shadow 0.3s ease;
+  width: 91%;
+}
+.card:hover {
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo {
+  width: 150px;
+  height: 100px;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+.info {
+  text-align: left;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.info h3 {
+  margin: 0;
+  margin-bottom: 8px;
+  font-size: 20px;
+  color: #333;
+}
+.info p {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #555;
+}
+.info .actions {
+  margin-top: 10px;
+}
+.info .actions button {
+  margin-right: 10px;
+  height: 28px;
+  width: 98px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+.info .actions button:hover {
+  background-color: #0056b3;
+}
+.info .actions button:nth-child(2) {
+  background-color: #28a745;
+}
+.info .actions button:nth-child(2):hover {
+  background-color: #218838;
+}
+.info .actions button:nth-child(3) {
+  background-color: #dc3545;
+}
+.info .actions button:nth-child(3):hover {
+  background-color: #c82333;
+}/*# sourceMappingURL=StudentCard.module.css.map */

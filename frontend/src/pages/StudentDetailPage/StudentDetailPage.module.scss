@@ -1,0 +1,42 @@
+.wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .details {
+    display: flex;
+    align-items: flex-start;
+    margin-top:60px;
+    justify-content: center;
+    gap: 150px;
+
+    .photo {
+      width: 240px;
+      height: 320px;
+      border-radius: 8px;
+      margin-left: 20px;
+    }
+  
+    .info {
+      p {
+        margin: 8px 0;
+        font-size: 16px;
+        color: #555;
+  
+        strong {
+          color: #333;
+        }
+      }
+    }
+  }
+  
