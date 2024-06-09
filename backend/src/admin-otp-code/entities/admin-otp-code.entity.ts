@@ -1,8 +1,8 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { AbstractEntityClass } from 'src/database/AbstractEntityClass';
-import { OtpStatus } from 'src/helpers/enums/otp-status.enum';
-import { OtpType } from 'src/helpers/enums/otp-type.enum';
-import { AdminUser } from 'src/admin-user/entities/admin-user.entity';
+import { Entity, Column, ManyToOne } from "typeorm";
+import { AbstractEntityClass } from "src/database/AbstractEntityClass.entity";
+import { OtpStatus } from "src/helpers/enums/otp-status.enum";
+import { OtpType } from "src/helpers/enums/otp-type.enum";
+import { AdminUser } from "src/admin-user/entities/admin-user.entity";
 
 @Entity()
 export class AdminOtpCode extends AbstractEntityClass<AdminOtpCode> {
@@ -13,15 +13,15 @@ export class AdminOtpCode extends AbstractEntityClass<AdminOtpCode> {
   expiration_time: Date;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: OtpType,
   })
   type: OtpType;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: OtpStatus,
-    default: 'unused',
+    default: "unused",
   })
   status: OtpStatus;
 

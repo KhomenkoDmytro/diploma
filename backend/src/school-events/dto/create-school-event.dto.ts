@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString, IsDateString, IsOptional, IsBoolean, IsNumber, IsEnum, IsArray, ArrayNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { EventType } from 'src/enums/event-type.enum';
+import { EventScope } from 'src/enums/event-scope.enum';
 
 export class CreateSchoolEventDto {
   @ApiProperty({ example: 'Annual Concert' })
@@ -28,6 +29,11 @@ export class CreateSchoolEventDto {
   @IsEnum(EventType)
   type: EventType;
 
+  @ApiProperty({ example: EventScope.SCHOOL })
+  @IsNotEmpty()
+  @IsEnum(EventScope)
+  level: EventScope
+
   @ApiProperty({ example: [1, 2] })
   @IsNotEmpty()
   @IsArray()
@@ -39,4 +45,9 @@ export class CreateSchoolEventDto {
   @IsOptional()
   @IsBoolean()
   isActive: boolean = true;
+
+  @ApiProperty({ example: 1 })
+  @IsNotEmpty()
+  @IsNumber()
+  institutionId:number;
 }

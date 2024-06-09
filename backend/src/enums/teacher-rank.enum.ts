@@ -1,0 +1,15 @@
+export enum Rank {
+    NINTH='9 розряд',
+    TENTH = '10 розряд',
+    ELEVENTH = '11 розряд',
+    SECOND_CATEGORY = '2 категорія',
+    FIRST_CATEGORY = '1 категорія',
+    HIGHEST_CATEGORY = 'вища категорія',
+    SENIOR_LECTURER = 'старший викладач',
+    LECTURER_METHODIST = 'викладач-методист',
+    CONFIRMED_HIGHEST_CATEGORY = 'підтверджена вища категорія',
+    CONFIRMED_LECTURER_METHODIST = 'підтверджений викладач-методист',
+    CONFIRMED_SENIOR_LECTURER = 'підтверджений старший викладач',
+    CONFIRMED_SECOND_CATEGORY = 'підтверджена 2 категорія',
+    CONFIRMED_FIRST_CATEGORY = 'підтверджена 1 категорія',
+  }

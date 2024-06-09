@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsDateString, IsUrl, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsUrl, IsEnum, IsNumber } from 'class-validator';
 import { DecreeType } from '../entities/decree.entity';
 
 export class CreateDecreeDto {
@@ -28,4 +28,9 @@ export class CreateDecreeDto {
   @IsNotEmpty()
   @IsUrl()
   readonly url: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 1 })
+  institutionId?: number;
 }

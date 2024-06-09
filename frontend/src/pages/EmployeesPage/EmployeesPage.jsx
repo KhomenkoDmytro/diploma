@@ -3,20 +3,25 @@ import EmployeeCard from '../../components/EmployeeCard/EmployeeCard';
 import CreateEmployeeModal from '../../components/CreateEmployeeModal/CreateEmployeeModal';
 import UpdateEmployeeModal from '../../components/UpdateEmployeeModal/UpdateEmployeeModal';
 import style from './EmployeesPage.module.scss';
+import { useAuth } from '../../context/AuthContext';
+import StyledHeading from '../../components/Heading/StyledHeading';
 
 const EmployeesPage = () => {
+  const { institutionId } = useAuth();
   const [employees, setEmployees] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {
-    fetchEmployees();
-  }, []);
+    if (institutionId) {
+      fetchEmployees();
+    }
+  }, [institutionId]);
 
   const fetchEmployees = async () => {
     try {
-      const response = await fetch('http://localhost:3000/employees');
+      const response = await fetch(`http://localhost:3000/employees?institutionId=${institutionId}`);
       const data = await response.json();
       setEmployees(data);
     } catch (error) {
@@ -31,7 +36,7 @@ const EmployeesPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newEmployee)
+        body: JSON.stringify({ ...newEmployee, institutionId })
       });
       fetchEmployees();
     } catch (error) {
@@ -46,7 +51,7 @@ const EmployeesPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updatedEmployee)
+        body: JSON.stringify({ ...updatedEmployee, institutionId })
       });
       fetchEmployees();
     } catch (error) {
@@ -76,7 +81,7 @@ const EmployeesPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <h2>Employees</h2>
+      <StyledHeading text="Працівники" />
       <div className={style.buttonGroup}>
         <button onClick={() => setIsCreateModalOpen(true)}>Додати</button>
       </div>

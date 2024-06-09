@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { AbstractEntityClass } from 'src/database/AbstractEntityClass.entity';
+import { Institution } from 'src/institution/entities/institution.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity()
-export class Letter {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Letter extends AbstractEntityClass<Letter> {
 
   @Column()
   number: string;
@@ -19,4 +19,7 @@ export class Letter {
 
   @Column()
   url: string;
+
+  @ManyToOne(() => Institution, (institution) => institution.employees)
+  institution: Institution;
 }

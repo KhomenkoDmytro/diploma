@@ -1,20 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AuthPayloadDto } from './dto/admin-local-auth-payload.dto';
-import { JwtService } from '@nestjs/jwt';
-import { AdminUser } from '../admin-user/entities/admin-user.entity';
-import { EntityManager } from 'typeorm';
-import { AdminUserService } from '../admin-user/admin-user.service';
-import { AdminSignUpDto } from './dto/admin-sign-up.dto';
-import { AdminChangePasswordDto } from './dto/admin-change-password.dto';
-import { AdminGenerateOtpDto } from './dto/admin-generate-otp.dto';
-import { AdminRecoverPasswordDto } from './dto/admin-recover-password.dto';
-import { AdminVerifyEmailDto } from './dto/admin-verify-email.dto';
-import { AdminChangeEmailDto } from './dto/admin-change-email.dto';
-import { AdminOtpCodeService } from '../admin-otp-code/admin-otp-code.service';
-import { OtpStatus } from '../helpers/enums/otp-status.enum';
-import { OtpType } from '../helpers/enums/otp-type.enum';
-import { validateGetById } from '../helpers/validateGetById';
-import { AwsSesService } from 'src/aws-ses/aws-ses.service';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { AuthPayloadDto } from "./dto/admin-local-auth-payload.dto";
+import { JwtService } from "@nestjs/jwt";
+import { AdminUser } from "../admin-user/entities/admin-user.entity";
+import { EntityManager } from "typeorm";
+import { AdminUserService } from "../admin-user/admin-user.service";
+import { AdminSignUpDto } from "./dto/admin-sign-up.dto";
+import { AdminChangePasswordDto } from "./dto/admin-change-password.dto";
+import { AdminGenerateOtpDto } from "./dto/admin-generate-otp.dto";
+import { AdminRecoverPasswordDto } from "./dto/admin-recover-password.dto";
+import { AdminVerifyEmailDto } from "./dto/admin-verify-email.dto";
+import { AdminChangeEmailDto } from "./dto/admin-change-email.dto";
+import { AdminOtpCodeService } from "../admin-otp-code/admin-otp-code.service";
+import { OtpStatus } from "../helpers/enums/otp-status.enum";
+import { OtpType } from "../helpers/enums/otp-type.enum";
+import { validateGetById } from "../helpers/validateGetById";
+import { AwsSesService } from "src/aws-ses/aws-ses.service";
+import { Institution } from "src/institution/entities/institution.entity";
+import { InstitutionService } from "src/institution/institution.service";
 
 @Injectable()
 export class AdminLocalAuthService {
@@ -24,6 +26,7 @@ export class AdminLocalAuthService {
     private readonly userService: AdminUserService,
     private readonly otpCodeService: AdminOtpCodeService,
     private readonly awsSesService: AwsSesService,
+    private readonly institutionService: InstitutionService,
   ) {}
 
   generateOTPcode() {
@@ -36,7 +39,7 @@ export class AdminLocalAuthService {
         where: {
           email: localAuthPayloadDto.email,
         },
-        relations: ['institution'],
+        relations: ["institution"],
       });
 
       if (!findUser) {
@@ -64,7 +67,14 @@ export class AdminLocalAuthService {
 
   async registrateUser(signUpPayloadDto: AdminSignUpDto) {
     try {
-      const user = await this.userService.create(signUpPayloadDto);
+      const user = await this.userService.create({
+        email: signUpPayloadDto.email,
+        password: signUpPayloadDto.password,
+        firstName: signUpPayloadDto.firstName,
+        lastName: signUpPayloadDto.lastName,
+        patronymic: signUpPayloadDto.patronymic
+      });
+  
       const otpCode = this.generateOTPcode();
       await this.otpCodeService.create({
         value: otpCode,
@@ -72,19 +82,43 @@ export class AdminLocalAuthService {
         expiration_minutes: 5,
         user_id: user.id,
       });
-
-      const { password, institution, ...tokenData } = user;
-      const token = this.jwtService.sign({ tokenData, institution_id: institution?.id });
+  
+      let institution = await this.entityManager.findOne(Institution, {
+        where: {
+          name: signUpPayloadDto.schoolName,
+          accessKey: signUpPayloadDto.accessKey,
+        },
+      });
+  
+      if (institution) {
+        await this.institutionService.addUserToInstitution(user.id, institution.id);
+      } else {
+        institution = await this.institutionService.create({
+          name: signUpPayloadDto.schoolName,
+          accessKey: signUpPayloadDto.accessKey,
+          address: signUpPayloadDto.schoolAddress,
+          adminUserId: user.id,
+        });
+      }
+  
+      const { password, ...tokenData } = user;
+      const token = this.jwtService.sign({
+        tokenData,
+        institution_id: institution?.id,
+      });
+  
       this.awsSesService.sendMail({
-        sourceEmail: 'gitlab@vepbit.com',
+        sourceEmail: "gitlab@vepbit.com",
         toAddressEmail: signUpPayloadDto.email,
         otpCode,
       });
+  
       return token;
     } catch (error) {
       throw error;
     }
   }
+  
 
   async verifyUser(verifyEmailDto: AdminVerifyEmailDto) {
     try {
@@ -115,8 +149,8 @@ export class AdminLocalAuthService {
       const updateAdminUserDto = { ...user, isVerified: true };
       await this.userService.update(user.id, updateAdminUserDto);
       return {
-        status: 'success',
-        message: 'User verified successfully',
+        status: "success",
+        message: "User verified successfully",
       };
     } catch (error) {
       throw error;
@@ -157,8 +191,8 @@ export class AdminLocalAuthService {
       this.otpCodeService.update(otp.id, { ...otp, status: OtpStatus.USED });
       await this.userService.update(user.id, updateAdminUserDto);
       return {
-        status: 'success',
-        message: 'Password changed',
+        status: "success",
+        message: "Password changed",
       };
     } catch (error) {
       throw error;
@@ -196,8 +230,8 @@ export class AdminLocalAuthService {
 
       await this.userService.update(user.id, updateAdminUserDto);
       return {
-        status: 'success',
-        message: 'Password changed',
+        status: "success",
+        message: "Password changed",
       };
     } catch (error) {
       throw error;
@@ -225,8 +259,8 @@ export class AdminLocalAuthService {
       };
       await this.otpCodeService.create(createOtpCodeOtp);
       return {
-        status: 'success',
-        message: 'OTP code sent to your email',
+        status: "success",
+        message: "OTP code sent to your email",
       };
     } catch (error) {
       throw error;
@@ -266,8 +300,8 @@ export class AdminLocalAuthService {
       isVerified: false,
     });
     return {
-      status: 'success',
-      message: 'Сonfirm new email address by otp.',
+      status: "success",
+      message: "Сonfirm new email address by otp.",
     };
   }
 }

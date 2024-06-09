@@ -1,0 +1,75 @@
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    max-height: 80vh; /* Додаємо максимальну висоту */
+    margin: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Додаємо вертикальний скролінг */
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  input,
+  select {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  button {
+    padding: 10px 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  button[type="button"] {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
+  button[type="button"]:hover {
+    background-color: #e53935;
+  }
+  

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import style from './StudentDetailPage.module.scss';
+import StyledHeading from '../../components/Heading/StyledHeading';
 
 const StudentDetailPage = () => {
   const { id } = useParams();
@@ -26,7 +27,7 @@ const StudentDetailPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <h2>{student.firstName} {student.lastName}</h2>
+      <StyledHeading>{student.firstName} {student.lastName}</StyledHeading>
       <div className={style.details}>
         <div className={style.info}>
           <p><strong>Ідентифікаційний номер:</strong> {student.identificationNumber}</p>

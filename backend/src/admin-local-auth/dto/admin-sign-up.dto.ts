@@ -5,10 +5,7 @@ import {
   MinLength,
   MaxLength,
   Matches,
-  IsEnum,
-  IsOptional,
 } from 'class-validator';
-import { Role } from 'src/helpers/enums/role.enum';
 
 export class AdminSignUpDto {
 
@@ -23,4 +20,28 @@ export class AdminSignUpDto {
   @Matches(/[a-zA-Z]/, { message: 'Password must contain at least one letter.' })
   @Matches(/[0-9]/, { message: 'Password must contain at least one digit.' })
   password: string;
+
+  @ApiProperty({ default: 'School Name' })
+  @IsString()
+  schoolName: string;
+
+  @ApiProperty({ default: 'Access Key' })
+  @IsString()
+  accessKey: string;
+
+  @ApiProperty({ default: 'School Address' })
+  @IsString()
+  schoolAddress: string;
+
+  @ApiProperty({ default: "Дмитро" })
+  @IsString()
+  firstName?: string;
+
+  @ApiProperty({ default: "Хоменко" })
+  @IsString()
+  lastName?: string;
+
+  @ApiProperty({ default: "Ігорович" })
+  @IsString()
+  patronymic?: string;
 }

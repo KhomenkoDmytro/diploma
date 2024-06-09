@@ -1,12 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { create, all, MathJsStatic } from "mathjs";
 import { Competition } from "src/competitions/entities/competition.entity";
 import { Complaint } from "src/complaints/entities/complaint.entity";
 import { Employee } from "src/employees/entities/employee.entity";
+import { Institution } from "src/institution/entities/institution.entity";
+import { InstitutionService } from "src/institution/institution.service";
 import { SchoolEvent } from "src/school-events/entities/school-event.entity";
 import { StudentPerformance } from "src/student-performances/entities/student-performance.entity";
 import { Repository } from "typeorm";
+import { CreateTopsisDto } from "./dto/create-topsi.dto";
 
 const math: MathJsStatic = create(all);
 
@@ -23,6 +26,8 @@ export class TopsisService {
     private readonly competitionRepository: Repository<Competition>,
     @InjectRepository(Complaint)
     private readonly complaintRepository: Repository<Complaint>,
+    @Inject(InstitutionService)
+    private readonly institutionService: InstitutionService,
   ) {}
 
   normalize(matrix: number[][]): number[][] {
@@ -63,16 +68,13 @@ export class TopsisService {
   ): { idealDistances: number[]; antiIdealDistances: number[] } {
     const idealDistances = matrix.map((row) =>
       Math.sqrt(
-        math.sum(
-          row.map((value, index) => (value - ideal[index]) ** 2),
-        ) || 0,
+        math.sum(row.map((value, index) => (value - ideal[index]) ** 2)) || 0,
       ),
     );
     const antiIdealDistances = matrix.map((row) =>
       Math.sqrt(
-        math.sum(
-          row.map((value, index) => (value - antiIdeal[index]) ** 2),
-        ) || 0,
+        math.sum(row.map((value, index) => (value - antiIdeal[index]) ** 2)) ||
+          0,
       ),
     );
     return { idealDistances, antiIdealDistances };
@@ -109,7 +111,7 @@ export class TopsisService {
     return scores;
   }
 
-  async getTeacherData(teacherId: number) {
+  async getTeacherData(teacherId: number, startDate?: Date, endDate?: Date) {
     const teacher = await this.employeeRepository.findOne({
       where: { id: teacherId },
     });
@@ -137,17 +139,41 @@ export class TopsisService {
       relations: ["employee"],
     });
 
+    const filterByDate = (items, dateField) => {
+      if (startDate || endDate) {
+        return items.filter((item) => {
+          const date = new Date(item[dateField]);
+          return (
+            (!startDate || date >= new Date(startDate)) &&
+            (!endDate || date <= new Date(endDate))
+          );
+        });
+      }
+      return items;
+    };
+
     return {
-      studentPerformances,
-      schoolEvents,
-      competitions,
-      complaints,
+      studentPerformances: filterByDate(studentPerformances, "date"),
+      schoolEvents: filterByDate(schoolEvents, "date"),
+      competitions: filterByDate(competitions, "date"),
+      complaints: filterByDate(complaints, "date"),
     };
   }
 
-  async calculateTeacherScores(teacherId: number) {
+  async calculateTeacherScores(
+    teacherId: number,
+    startDate?: Date,
+    endDate?: Date,
+  ) {
     const { competitions, studentPerformances, schoolEvents, complaints } =
-      await this.getTeacherData(teacherId);
+      await this.getTeacherData(teacherId, startDate, endDate);
+
+    console.log({
+      competitions,
+      studentPerformances,
+      schoolEvents,
+      complaints,
+    });
 
     const contestWeights = [5, 1, 3];
     const values = {
@@ -182,7 +208,14 @@ export class TopsisService {
         national: 7,
         international: 9,
       },
-      performanceLevel: { international: 9, national: 7, regional: 5, city: 3, school: 1, extracurricular: 1 },
+      performanceLevel: {
+        international: 9,
+        national: 7,
+        regional: 5,
+        city: 3,
+        school: 1,
+        extracurricular: 1,
+      },
     };
 
     let contestScore = 0;
@@ -193,9 +226,11 @@ export class TopsisService {
     competitions.forEach((competition) => {
       contestScore +=
         (values.contestType[competition.competitionType.toLowerCase()] || 0) *
-        contestWeights[0] +
-        (values.contestPlace[competition.result.toLowerCase()] || 0) * contestWeights[1] +
-        (values.contestLevel[competition.level.toLowerCase()] || 0) * contestWeights[2];
+          contestWeights[0] +
+        (values.contestPlace[competition.result.toLowerCase()] || 0) *
+          contestWeights[1] +
+        (values.contestLevel[competition.level.toLowerCase()] || 0) *
+          contestWeights[2];
     });
 
     studentPerformances.forEach((performance) => {
@@ -209,8 +244,7 @@ export class TopsisService {
     });
 
     complaints.forEach((complaint) => {
-      complaintsScore +=
-        values.complaints[complaint.level.toLowerCase()] || 0;
+      complaintsScore += values.complaints[complaint.level.toLowerCase()] || 0;
     });
 
     return {
@@ -221,12 +255,21 @@ export class TopsisService {
     };
   }
 
-  async getTeacherMatrix() {
-    const teachers = await this.employeeRepository.find();
+  async getTeacherMatrix(
+    institutionId: number,
+    startDate?: Date,
+    endDate?: Date,
+  ) {
+    const teachers =
+      await this.institutionService.getTeachersByInstitutionId(institutionId);
 
     const teacherMatrices = await Promise.all(
       teachers.map(async (teacher) => {
-        const scores = await this.calculateTeacherScores(teacher.id);
+        const scores = await this.calculateTeacherScores(
+          teacher.id,
+          startDate,
+          endDate,
+        );
         return {
           teacherId: teacher.id,
           teacherName: `${teacher.firstName} ${teacher.lastName}`,
@@ -243,8 +286,15 @@ export class TopsisService {
     return teacherMatrices;
   }
 
-  async getTopsisResults() {
-    const teacherMatrices = await this.getTeacherMatrix();
+  async getTopsisResults(createTopsisDto: CreateTopsisDto) {
+    const { institutionId, startDate: startDateString, endDate: endDateString } = createTopsisDto;
+    const startDate = startDateString ? new Date(startDateString) : undefined;
+    const endDate = endDateString ? new Date(endDateString) : undefined;
+    const teacherMatrices = await this.getTeacherMatrix(
+      institutionId,
+      startDate,
+      endDate,
+    );
     const matrix = teacherMatrices.map((tm) => tm.scores);
     const weights = [5, 1, 3, 7];
     const isBenefit = [true, true, true, false];

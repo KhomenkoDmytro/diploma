@@ -5,6 +5,7 @@ import { SchoolEvent } from './entities/school-event.entity';
 import { CreateSchoolEventDto } from './dto/create-school-event.dto';
 import { UpdateSchoolEventDto } from './dto/update-school-event.dto';
 import { Employee } from 'src/employees/entities/employee.entity';
+import { Institution } from 'src/institution/entities/institution.entity';
 
 @Injectable()
 export class SchoolEventService {
@@ -13,6 +14,8 @@ export class SchoolEventService {
     private readonly schoolEventRepository: Repository<SchoolEvent>,
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
+    @InjectRepository(Institution)
+    private readonly institutionRepository: Repository<Institution>,
   ) {}
 
   async findAll(): Promise<SchoolEvent[]> {
@@ -28,12 +31,19 @@ export class SchoolEventService {
   }
 
   async create(createSchoolEventDto: CreateSchoolEventDto): Promise<SchoolEvent> {
-    const { organizerIds, ...rest } = createSchoolEventDto;
+    const { institutionId, organizerIds, ...rest } = createSchoolEventDto;
+
+    const institution = await this.institutionRepository.findOne({where: {id:institutionId}});
+    if (!institution) {
+      throw new NotFoundException(`Institution with ID ${institutionId} not found`);
+    }
+
     const organizers = await this.employeeRepository.findByIds(organizerIds);
     if (organizers.length !== organizerIds.length) {
       throw new NotFoundException(`Some organizers not found`);
     }
-    const event = this.schoolEventRepository.create({ ...rest, organizers });
+
+    const event = this.schoolEventRepository.create({ ...rest, institution, organizers });
     return this.schoolEventRepository.save(event);
   }
 

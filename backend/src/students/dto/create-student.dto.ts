@@ -64,7 +64,6 @@ export class CreateStudentDto {
   actualAddress?: string;
 
   @IsNumber()
-  @IsNotEmpty()
   @ApiProperty({ example: 1 })
-  institutionId: number;
+  institutionId?: number;
 }

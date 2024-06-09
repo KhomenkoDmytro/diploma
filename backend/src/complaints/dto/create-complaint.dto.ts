@@ -47,4 +47,9 @@ export class CreateComplaintDto {
   @IsNotEmpty()
   @IsEnum(EventScope)
   level: EventScope;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 1 })
+  institutionId?: number;
 }

@@ -6,6 +6,7 @@ import { CreateCompetitionDto } from './dto/create-competition.dto';
 import { UpdateCompetitionDto } from './dto/update-competition.dto';
 import { Student } from '../students/entities/student.entity';
 import { Employee } from '../employees/entities/employee.entity';
+import { Institution } from 'src/institution/entities/institution.entity';
 
 @Injectable()
 export class CompetitionsService {
@@ -16,10 +17,12 @@ export class CompetitionsService {
     private readonly studentRepository: Repository<Student>,
     @InjectRepository(Employee)
     private readonly teacherRepository: Repository<Employee>,
+    @InjectRepository(Institution)
+    private readonly institutionRepository: Repository<Institution>
   ) {}
 
-  async findAll(): Promise<Competition[]> {
-    return this.competitionRepository.find({ relations: ['student', 'teacher'] });
+  async findAll() {
+    return await this.competitionRepository.find({ relations: ['student', 'teacher'] });
   }
 
   async findOne(id: number): Promise<Competition> {
@@ -31,7 +34,7 @@ export class CompetitionsService {
   }
 
   async create(createCompetitionDto: CreateCompetitionDto): Promise<Competition> {
-    const { studentId, teacherId, ...dto } = createCompetitionDto;
+    const { studentId, teacherId, institutionId, ...dto } = createCompetitionDto;
     const competition = this.competitionRepository.create(dto);
 
     if (studentId) {
@@ -48,6 +51,14 @@ export class CompetitionsService {
       }
     }
 
+    if(institutionId) {
+      const institution = await this.institutionRepository.findOne({
+        where: { id: institutionId },
+      });
+      competition.institution = institution;
+    }
+    console.log(dto);
+    console.log(competition);
     return this.competitionRepository.save(competition);
   }
 

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import styles from './LoginPage.module.scss';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const initialValues = {
   email: '',
@@ -70,6 +70,14 @@ const Login = () => {
           </Form>
         )}
       </Formik>
+      <div className={styles.links}>
+        <div className={styles.link}>        
+        <Link to="/registration">Реєстрація</Link>
+        </div>
+        <div className={styles.link}>        
+        <Link to="/forgot-password">Забули пароль?</Link>
+        </div>
+      </div>
     </div>
   );
 };

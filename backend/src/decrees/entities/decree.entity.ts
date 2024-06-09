@@ -1,21 +1,21 @@
-import { AbstractEntityClass } from 'src/database/AbstractEntityClass';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { AbstractEntityClass } from "src/database/AbstractEntityClass.entity";
+import { Institution } from "src/institution/entities/institution.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 export enum DecreeType {
-  PERSONNEL = 'кадровий',
-  GENERAL = 'загальний'
+  PERSONNEL = "кадровий",
+  GENERAL = "загальний",
 }
 
 @Entity()
-export class Decree extends AbstractEntityClass<Decree>{
-
+export class Decree extends AbstractEntityClass<Decree> {
   @Column()
   number: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: DecreeType,
-    default: DecreeType.GENERAL
+    default: DecreeType.GENERAL,
   })
   type: DecreeType;
 
@@ -28,6 +28,6 @@ export class Decree extends AbstractEntityClass<Decree>{
   @Column()
   url: string;
 
- 
-
+  @ManyToOne(() => Institution, (institution) => institution.decrees)
+  institution: Institution;
 }

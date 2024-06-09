@@ -1,1 +1,38 @@
-.TopsisResultsPage {}
+.container {
+    padding: 20px;
+  }
+  
+  .datePickerContainer {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+
+  }
+  
+  .datePicker {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 200px;
+    margin-right:30px
+  }
+  
+  .filterButton {
+    padding: 10px 15px;
+    max-width: 150px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .filterButton:hover {
+    background-color: #0056b3;
+  }
+  

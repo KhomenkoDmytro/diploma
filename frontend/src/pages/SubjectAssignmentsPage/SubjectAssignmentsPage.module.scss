@@ -1,66 +1,93 @@
 .wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
   padding: 20px;
-  background-color: #f1f1f1;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .buttonGroup {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 
   button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #28a745;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #218838;
-    }
-  }
-
-  .searchInput {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+    max-width: 150px;
   }
 }
 
-.resultsCount {
-  text-align: left;
-  margin-bottom: 20px;
-  color: #333;
+.searchInput {
+  max-width: 200px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
+}
 
-  th, td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
 
-  th {
-    background-color: #f4f4f4;
-    cursor: pointer;
-  }
+.table th {
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
 
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 30px;
+  text-align: center;
+}
+
+.teacherSection {
+  margin-bottom: 20px;
+}
+
+.updateButton,
+.deleteButton {
+  padding: 5px 10px;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.updateButton {
+  background-color: #28a745;
+  margin-right: 5px;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+}
+
+.resultsCount {
+  margin-bottom: 10px;
+}
+
+.teacherSection h2 {
+  margin-bottom: 10px;
+}
+
+.teacherSection .table {
+  margin-bottom: 20px;
+}
+
+.teacherSection .table th,
+.teacherSection .table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.teacherSection .table th {
+  background-color: #f0f0f0;
 }

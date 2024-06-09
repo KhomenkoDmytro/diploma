@@ -6,7 +6,6 @@ import { EmployeesModule } from "./employees/employees.module";
 import { StudentsModule } from "./students/students.module";
 import { SubjectsModule } from "./subjects/subjects.module";
 import { SubjectAssignmentsModule } from "./subject-assignments/subject-assignments.module";
-import { ActivitiesModule } from "./activities/activities.module";
 import { TopsisModule } from "./topsis/topsis.module";
 import { SchoolEventsModule } from "./school-events/school-events.module";
 import { StudentPerformancesModule } from "./student-performances/student-performances.module";
@@ -18,6 +17,8 @@ import { AdminLocalAuthModule } from "./admin-local-auth/admin-local-auth.module
 import { AdminOtpCodeModule } from "./admin-otp-code/admin-otp-code.module";
 import { AwsSesModule } from "./aws-ses/aws-ses.module";
 import { InstitutionModule } from "./institution/institution.module";
+import { CertificationLettersModule } from "./certification-letters/certification-letters.module";
+import { LettersModule } from "./letters/letters.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -49,7 +50,6 @@ async function bootstrap() {
       EmployeesModule,
       StudentsModule,
       SubjectsModule,
-      ActivitiesModule,
       SubjectAssignmentsModule,
       SchoolEventsModule,
       StudentPerformancesModule,
@@ -60,7 +60,9 @@ async function bootstrap() {
       AdminGoogleOauthModule,
       AdminLocalAuthModule,
       AdminOtpCodeModule,
-      InstitutionModule
+      InstitutionModule,
+      CertificationLettersModule,
+      LettersModule
     ],
   });
   SwaggerModule.setup("api", app, document);

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import Select from 'react-select';
 import style from './CreateSubjectAssignmentModal.module.scss';
+import { useAuth } from '../../context/AuthContext';
 
 Modal.setAppElement('#root');
 
 const CreateSubjectAssignmentModal = ({ isOpen, onClose, onCreate }) => {
+  const {institutionId}=useAuth();
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
@@ -23,9 +25,9 @@ const CreateSubjectAssignmentModal = ({ isOpen, onClose, onCreate }) => {
   const fetchData = async () => {
     try {
       const [subjectsResponse, studentsResponse, teachersResponse] = await Promise.all([
-        fetch('http://localhost:3000/subjects'),
-        fetch('http://localhost:3000/students'),
-        fetch('http://localhost:3000/employees'),
+        fetch( `http://localhost:3000/subjects`),
+        fetch(`http://localhost:3000/institutions/${institutionId}/students`),
+        fetch(`http://localhost:3000/institutions/${institutionId}/teachers`),
       ]);
 
       const [subjectsData, studentsData, teachersData] = await Promise.all([

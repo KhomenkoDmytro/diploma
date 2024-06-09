@@ -4,6 +4,8 @@ import style from './DecreesPage.module.scss';
 import CreateDecreeModal from '../../components/CreateDecreeModal/CreateDecreeModal';
 import UpdateDecreeModal from '../../components/UpdateDecreeModal/UpdateDecreeModal';
 import documentIcon from '../img/audit.png';
+import { useAuth } from '../../context/AuthContext';
+import StyledHeading from '../../components/Heading/StyledHeading';
 // Глобальний фільтр для здійснення пошуку за всіма полями
 const GlobalFilter = ({ globalFilter, setGlobalFilter }) => (
   <span>
@@ -18,6 +20,7 @@ const GlobalFilter = ({ globalFilter, setGlobalFilter }) => (
 );
 
 const DecreesPage = () => {
+  const { institutionId } = useAuth();
   const [decrees, setDecrees] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -25,48 +28,53 @@ const DecreesPage = () => {
 
   useEffect(() => {
     fetchDecrees();
-  }, []);
+  }, [institutionId]);
 
   const fetchDecrees = async () => {
     try {
-      const response = await fetch('http://localhost:3000/decrees');
+      const response = await fetch(`http://localhost:3000/institutions/${institutionId}/decrees`);
       const data = await response.json();
       setDecrees(data);
     } catch (error) {
       console.error('Помилка завантаження декретів:', error);
     }
   };
-
+  
   const handleAddDecree = async (newDecree) => {
     try {
+      // Додавання ідентифікатора закладу до об'єкта декрету
+      const decreeWithInstitutionId = { ...newDecree, institutionId };
+      
       await fetch('http://localhost:3000/decrees', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newDecree)
+        body: JSON.stringify(decreeWithInstitutionId)
       });
       fetchDecrees();
     } catch (error) {
       console.error('Помилка створення декрету:', error);
     }
   };
-
+  
   const handleUpdateDecree = async (updatedDecree) => {
     try {
+      const decreeWithInstitutionId = { ...updatedDecree, institutionId };
+      
       await fetch(`http://localhost:3000/decrees/${updatedDecree.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updatedDecree)
+        body: JSON.stringify(decreeWithInstitutionId)
       });
       fetchDecrees();
     } catch (error) {
       console.error('Помилка оновлення декрету:', error);
     }
   };
-
+  
   const handleDeleteDecree = async (id) => {
     try {
       await fetch(`http://localhost:3000/decrees/${id}`, {
@@ -77,6 +85,8 @@ const DecreesPage = () => {
       console.error('Помилка видалення декрету:', error);
     }
   };
+  
+
 
   const openUpdateModal = (decree) => {
     setSelectedDecree(decree);
@@ -168,7 +178,7 @@ const DecreesPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <h2>Накази</h2>
+      <StyledHeading text="Накази" />
       <div className={style.buttonGroup}>
         <button onClick={() => setIsCreateModalOpen(true)}>Додати</button>
         <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />

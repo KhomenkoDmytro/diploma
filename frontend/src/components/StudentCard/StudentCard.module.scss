@@ -40,11 +40,13 @@
   
     .actions {
       margin-top: 10px;
-  
+      display:flex;
+
       button {
-        margin-right: 10px;
-        height: 28px;
-        width:98px;
+        margin: 0 auto;
+        width:110px;
+        padding: 8px;
+        margin-bottom: 5px;
         border: none;
         border-radius: 4px;
         cursor: pointer;

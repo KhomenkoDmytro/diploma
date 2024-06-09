@@ -3,22 +3,32 @@ import StudentCard from '../../components/StudentCard/StudentCard';
 import CreateStudentModal from '../../components/CreateStudentModal/CreateStudentModal';
 import UpdateStudentModal from '../../components/UpdateStudentModal/UpdateStudentModal';
 import style from './StudentsPage.module.scss';
+import { useAuth } from '../../context/AuthContext';
+import StyledHeading from '../../components/Heading/StyledHeading';
 
 const StudentsPage = () => {
+  const { institutionId } = useAuth();
   const [students, setStudents] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
+    if (institutionId) {
+      fetchStudents();
+    }
+  }, [institutionId]);
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch('http://localhost:3000/students');
+      const response = await fetch(`http://localhost:3000/students?institutionId=${institutionId}`);
       const data = await response.json();
-      setStudents(data);
+      if (Array.isArray(data)) {
+        setStudents(data);
+      } else {
+        setStudents([]);
+        console.error('Error: expected an array of students');
+      }
     } catch (error) {
       console.error('Error fetching students:', error);
     }
@@ -31,7 +41,7 @@ const StudentsPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newStudent)
+        body: JSON.stringify({ ...newStudent, institutionId })
       });
       fetchStudents();
     } catch (error) {
@@ -46,7 +56,7 @@ const StudentsPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updatedStudent)
+        body: JSON.stringify({ ...updatedStudent, institutionId })
       });
       fetchStudents();
     } catch (error) {
@@ -76,7 +86,7 @@ const StudentsPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <h2>Students</h2>
+      <StyledHeading text="Учні"></StyledHeading>
       <div className={style.buttonGroup}>
         <button onClick={() => setIsCreateModalOpen(true)}>Додати</button>
       </div>

@@ -1,40 +1,42 @@
-// src/entities/certificationLetter.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Employee } from 'src/employees/entities/employee.entity';
+import { Rank } from 'src/enums/teacher-rank.enum';
+import { JobTitle } from 'src/enums/job-titlle.enum';
+import { Instrument } from 'src/enums/instrument.enum';
+import { AbstractEntityClass } from 'src/database/AbstractEntityClass.entity';
 
 @Entity()
-export class CertificationLetter {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class CertificationLetter extends AbstractEntityClass<CertificationLetter> {
 
-  @Column()
-  employeeId: number;
+  @ManyToOne(() => Employee, (employee) => employee.certifications)
+  employee: Employee;
 
   @Column({
     type: 'enum',
-    enum: ['JUNIOR', 'SENIOR', 'LEAD'],
+    enum: Rank,
   })
-  previousRank: string;
+  previousRank: Rank;
 
   @Column({
     type: 'enum',
-    enum: ['JUNIOR', 'SENIOR', 'LEAD'],
+    enum: Rank,
   })
-  newRank: string;
+  currentRank: Rank;
 
   @Column()
   issuanceDate: Date;
 
   @Column({
     type: 'enum',
-    enum: ['TEACHER', 'PROFESSOR', 'LECTURER'],
+    enum: JobTitle,
   })
-  jobTitle: string;
+  jobTitle: JobTitle;
 
   @Column({
     type: 'enum',
-    enum: ['MATH', 'SCIENCE', 'LITERATURE'],
+    enum: Instrument,
   })
-  subject: string;
+  subject: Instrument;
 
   @Column('text')
   note: string;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -18,8 +18,8 @@ export class EmployeesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all employees' })
-  findAll() {
-    return this.employeesService.findAll();
+  findAll(@Query('institutionId') institutionId: number) {
+    return this.employeesService.findAll(institutionId);
   }
 
   @Get(':id')

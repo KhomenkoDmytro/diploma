@@ -13,6 +13,7 @@ import { AdminOtpCodeService } from '../admin-otp-code/admin-otp-code.service';
 import { AdminOtpCode } from '../admin-otp-code/entities/admin-otp-code.entity';
 import { AwsSesService } from 'src/aws-ses/aws-ses.service';
 import { Institution } from 'src/institution/entities/institution.entity';
+import { InstitutionService } from 'src/institution/institution.service';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Institution } from 'src/institution/entities/institution.entity';
     JwtStrategy,
     AdminUserService,
     AdminOtpCodeService,
+    InstitutionService,
     AwsSesService
   ],
   controllers: [AdminLocalAuthController],

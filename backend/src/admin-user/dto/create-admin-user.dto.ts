@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsEmail,
   IsString,
@@ -8,22 +8,33 @@ import {
   IsBoolean,
   Matches,
   IsNumber,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateAdminUserDto {
-
-  @ApiProperty({ default: 'email@gmail.com' })
+  @ApiProperty({ default: "email@gmail.com" })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ default: 'password' })
+  @ApiProperty({ default: "Дмитро" })
+  @IsString()
+  firstName?: string;
+
+  @ApiProperty({ default: "Хоменко" })
+  @IsString()
+  lastName?: string;
+
+  @ApiProperty({ default: "Ігорович" })
+  @IsString()
+  patronymic?: string;
+
+  @ApiProperty({ default: "password" })
   @IsString()
   @MinLength(8)
   @MaxLength(20)
   @Matches(/[a-zA-Z]/, {
-    message: 'Password must contain at least one letter.',
+    message: "Password must contain at least one letter.",
   })
-  @Matches(/[0-9]/, { message: 'Password must contain at least one digit.' })
+  @Matches(/[0-9]/, { message: "Password must contain at least one digit." })
   password: string;
 
   @IsOptional()

@@ -1,15 +1,16 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { TopsisService } from './topsis.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateTopsisDto } from './dto/create-topsi.dto';
 
 @ApiTags('topsis')
 @Controller('topsis')
 export class TopsisController {
   constructor(private readonly topsisService: TopsisService) {}
 
-  @Get()
-  getTopsisResults() {
-    return this.topsisService.getTopsisResults();
+  @Post()
+  getTopsisResults(@Body() topsisDto:CreateTopsisDto) {
+    return this.topsisService.getTopsisResults(topsisDto);
   }
 
   @Get(':id/data')

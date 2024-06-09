@@ -13,6 +13,14 @@ import TopsisResultsPage from './pages/TopsisResultsPage/TopsisResultsPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import Register from './pages/RegistrationPage/RegistrationPage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import UserProfilePage from './pages/UserProfilePage/UserProfilePage';
+import CompetitionsPage from './pages/CompetitionsPage/CompetitionsPage';
+import PageNotFound from './pages/PageNotFound/PageNotFound';
+import ComplaintsPage from './pages/ComplaintsPage/ComplaintsPage';
+import CertificationLettersPage from './pages/CertificationLetterPage/CertificationLetterPage';
+import LettersPage from './pages/LettersPage/LettersPage';
+import StudentPerformancesPage from './pages/StudentPerformancesPage/StudentPerformancesPage';
+import SchoolEventsPage from './pages/SchoolEventsPage/SchoolEventsPage';
 
 function AppRoutes() {
   return (
@@ -20,16 +28,23 @@ function AppRoutes() {
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="" element={<ProtectedRoute content={<EmployeesPage/>} />} />
+            <Route path="employees" element={<ProtectedRoute content={<EmployeesPage/>} />} />
+            <Route path="" element={<UserProfilePage />} index />
             <Route path="employee/:id" element={<EmployeeDetailPage />}/>
             <Route path="analytics" element={<ProtectedRoute content={<TopsisResultsPage/>}/>} />
             <Route path="students" element={<ProtectedRoute content={<StudentsPage/>} />} />
             <Route path="subject-assignment" element={<ProtectedRoute content={<SubjectAssignmentsPage/>}/>}/>
             <Route path="student/:id" element={<StudentDetailPage/> } />
-            <Route path="activities" element={<ProtectedRoute content={<ActivityPage/>} />} />
+            <Route path="events" element={<ProtectedRoute content={<SchoolEventsPage/>} />} />
             <Route path="decrees" element={<ProtectedRoute content={<DecreesPage />} />} />
-            <Route path="letters" element={<div>Letters Page</div>} />
-            <Route path="prices" element={<div>Prices Page</div>} />
+            <Route path="competitions" element={<ProtectedRoute content={<CompetitionsPage />} />} />
+            <Route path="concerts" element={<ProtectedRoute content={<StudentPerformancesPage />} />} />
+            <Route path="complaints" element={<ProtectedRoute content={<ComplaintsPage/>}/>}/>
+            <Route path="certification-letters" element={<ProtectedRoute content={<CertificationLettersPage/>}/>}/>
+            <Route path="letters" element={<ProtectedRoute content={<LettersPage/>} />}/>
+            <Route path="prices" element={<SchoolEventsPage/>} />
+             <Route path={'*'} element={<PageNotFound />} />
+ 
           </Route>
           <Route path="/login" element={<LoginPage/>}></Route>
           <Route path="/registration" element={<Register/>}></Route>

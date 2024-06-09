@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateTopsiDto } from './create-topsi.dto';
+import { CreateTopsisDto } from './create-topsi.dto';
 
-export class UpdateTopsiDto extends PartialType(CreateTopsiDto) {}
+export class UpdateTopsiDto extends PartialType(CreateTopsisDto) {}

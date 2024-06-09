@@ -7,6 +7,9 @@ import { StudentPerformance } from 'src/student-performances/entities/student-pe
 import { SchoolEvent } from 'src/school-events/entities/school-event.entity';
 import { Competition } from 'src/competitions/entities/competition.entity';
 import { Complaint } from 'src/complaints/entities/complaint.entity';
+import { Institution } from 'src/institution/entities/institution.entity';
+import { InstitutionService } from 'src/institution/institution.service';
+import { AdminUser } from 'src/admin-user/entities/admin-user.entity';
 
 @Module({
   imports: [
@@ -15,10 +18,12 @@ import { Complaint } from 'src/complaints/entities/complaint.entity';
       StudentPerformance,
       SchoolEvent,
       Competition,
-      Complaint
+      Complaint, 
+      Institution,
+      AdminUser
     ]),
   ],
   controllers: [TopsisController],
-  providers: [TopsisService],
+  providers: [TopsisService, InstitutionService],
 })
 export class TopsisModule {}

@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { Employee } from "src/employees/entities/employee.entity";
 import { EventScope } from "src/enums/event-scope.enum";
-import { AbstractEntityClass } from "src/database/AbstractEntityClass";
+import { AbstractEntityClass } from "src/database/AbstractEntityClass.entity";
+import { Institution } from "src/institution/entities/institution.entity";
 
 @Entity()
 export class Complaint extends AbstractEntityClass<Complaint> {
@@ -18,7 +19,7 @@ export class Complaint extends AbstractEntityClass<Complaint> {
   status: string;
 
   @ManyToOne(() => Employee, (employee) => employee.complaints)
-  employee: Employee;
+  employee?: Employee;
 
   @Column()
   url: string;
@@ -31,4 +32,7 @@ export class Complaint extends AbstractEntityClass<Complaint> {
 
   @Column({ type: "enum", enum: EventScope })
   level: EventScope;
+
+  @ManyToOne(() => Institution, (institution) => institution.complaints)
+  institution?: Institution;
 }

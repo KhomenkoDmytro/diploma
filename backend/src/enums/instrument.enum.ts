@@ -1,0 +1,16 @@
+export enum Instrument {
+    SOLO_SINGING = 'сольний спів',
+    POP_SINGING = 'естрадний спів',
+    BANDURA = 'бандура',
+    VIOLIN = 'скрипка',
+    CELLO = 'віолончель',
+    PIANO = 'фортепіано',
+    PERCUSSION = 'ударні',
+    WIND_INSTRUMENTS = 'духові',
+    ARTIST = 'художник',
+    DANCE = 'танці',
+    CHOIR = 'хор',
+    MUSIC_THEORY = 'музично-теоретичні дисципліни',
+    GUITAR = 'гитара',
+    DOMRA = 'домра',
+  }

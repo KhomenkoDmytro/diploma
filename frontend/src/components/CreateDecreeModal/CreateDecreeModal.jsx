@@ -5,6 +5,7 @@ import style from './CreateDecreeModal.module.scss';
 Modal.setAppElement('#root');
 
 const CreateDecreeModal = ({ isOpen, onClose, onCreate }) => {
+  
   const [formData, setFormData] = useState({
     number: '',
     name: '',

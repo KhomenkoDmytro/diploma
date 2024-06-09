@@ -29,12 +29,18 @@ export class StudentsService {
     return this.studentRepository.save(student);
   }
 
-  async findAll(): Promise<Student[]> {
-    return this.studentRepository.find({ relations: ['competitions', 'institution', 'performances', 'assignments'] });
+  async findAll(institutionId: number): Promise<Student[]> {
+    return this.studentRepository.find({
+      where: { institution: { id: institutionId } },
+      relations: ['competitions', 'institution', 'performances', 'assignments'],
+    });
   }
 
   async findOne(id: number): Promise<Student> {
-    const student = await this.studentRepository.findOne({ where: { id }, relations: ['competitions', 'institution', 'performances', 'assignments'] });
+    const student = await this.studentRepository.findOne({
+      where: { id },
+      relations: ['competitions', 'institution', 'performances', 'assignments'],
+    });
     if (!student) {
       throw new NotFoundException(`Student with ID ${id} not found`);
     }
@@ -42,25 +48,25 @@ export class StudentsService {
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto): Promise<Student> {
+    const student = await this.studentRepository.findOne({ where: { id, institution: { id: updateStudentDto.institutionId } }, relations: ['institution', 'competitions', 'performances', 'assignments'] });
+    if (!student) {
+      throw new NotFoundException(`Student with ID ${id} not found`);
+    }
+
     if (updateStudentDto.institutionId) {
       const institution = await this.institutionRepository.findOne({ where: { id: updateStudentDto.institutionId } });
       if (!institution) {
         throw new NotFoundException(`Institution with ID ${updateStudentDto.institutionId} not found`);
       }
-      await this.studentRepository.update(id, { ...updateStudentDto, institution });
-    } else {
-      await this.studentRepository.update(id, updateStudentDto);
+      student.institution = institution;
     }
 
-    const updatedStudent = await this.studentRepository.findOne({ where: { id }, relations: ['competitions', 'institution', 'performances', 'assignments'] });
-    if (!updatedStudent) {
-      throw new NotFoundException(`Student with ID ${id} not found`);
-    }
-    return updatedStudent;
+    Object.assign(student, updateStudentDto);
+    return this.studentRepository.save(student);
   }
 
   async remove(id: number): Promise<void> {
-    const result = await this.studentRepository.delete(id);
+    const result = await this.studentRepository.delete({ id });
     if (result.affected === 0) {
       throw new NotFoundException(`Student with ID ${id} not found`);
     }

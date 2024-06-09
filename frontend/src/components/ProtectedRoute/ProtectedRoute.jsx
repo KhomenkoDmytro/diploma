@@ -1,14 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../context/AuthContext';
 
 export default function ProtectedRoute({ content }) {
-  const { isAuth, checkAuth } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { isAuth } = useAuth();
 
   return isAuth ? content : <Navigate to='/login' replace />;
 }
